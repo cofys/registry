@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en" class="dark"> <!-- Added 'dark' class for default dark mode -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azalea Isles Registries</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Configure Tailwind for dark mode
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <style>
+        /* Use Inter font */
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* Custom scrollbar for aesthetics */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #6b7280; /* gray-500 */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af; /* gray-400 */
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937; /* gray-800 */
+        }
+
+        /* NEW: Animation for table rows */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .fade-in {
+            /* Apply the animation */
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        /* NEW: Class for copy-to-clipboard feedback */
+        .copied-feedback {
+            background-color: #22c55e !important; /* Tailwind green-500 */
+            border-color: #16a34a !important;   /* Tailwind green-600 */
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-slate-800 text-gray-100 min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-gray-800/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-700/75">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-3 flex-wrap gap-4">
+                <!-- Left Side: Title + Switcher -->
+                <div class="flex items-center flex-wrap gap-4">
+                    <!-- Page Title -->
+                    <h1 id="page-title" class="text-2xl font-bold text-gray-100 flex items-center gap-3">
+                        <span class="bg-indigo-600 text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Official</span>
+                        <span role="img" aria-label="store" class="text-3xl">🏪</span>
+                        Azalea Isles Shop Registry
+                    </h1>
+                    <!-- Registry Switcher -->
+                    <div class="flex gap-1 p-1 bg-gray-700/75 rounded-xl">
+                        <button id="show-shops" class="switch-btn flex-1 px-4 py-1.5 font-semibold rounded-lg transition-all duration-300 text-sm">
+                            Shops
+                        </button>
+                        <button id="show-rentals" class="switch-btn flex-1 px-4 py-1.5 font-semibold rounded-lg transition-all duration-300 text-sm">
+                            Rentals
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Report/Update Link -->
+                <a href="https://discord.gg/mpSu9YfVjg" class="report-issue bg-blue-600 text-white font-semibold px-5 py-2.5 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-300 transform hover:-translate-y-0.5" id="report-link" target="_blank" rel="noopener noreferrer">
+                    Join MoSS Discord
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Stats Grid (Simplified) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+            <div class="stat-card bg-gray-800/80 backdrop-blur-md shadow-lg border border-gray-700/50 rounded-2xl p-4 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                <div class="stat-number text-3xl font-bold text-blue-400 mb-1" id="total-items">0</div>
+                <div class="stat-label text-sm font-semibold text-gray-400 uppercase tracking-wider">Total Listings</div>
+            </div>
+            <div class="stat-card bg-gray-800/80 backdrop-blur-md shadow-lg border border-gray-700/50 rounded-2xl p-4 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                <div class="stat-number text-3xl font-bold text-amber-400 mb-1" id="recently-verified">0</div>
+                <div class="stat-label text-sm font-semibold text-gray-400 uppercase tracking-wider">Updated &lt; 7 Days</div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls bg-gray-800/80 backdrop-blur-md shadow-lg border border-gray-700/50 rounded-2xl p-6 mb-8 flex flex-wrap gap-4 items-center">
+            <div class="search-box flex-grow min-w-[250px] relative">
+                <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <input type="text" id="search-input" placeholder="Search by name, GPS, type, or notes..." class="w-full pl-10 pr-4 py-3 bg-gray-700 text-gray-100 border-2 border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all placeholder-gray-400">
+            </div>
+            <div class="filter-group flex gap-2 flex-wrap">
+                <select id="category-filter" class="pl-4 pr-10 py-3 border-2 border-gray-600 rounded-xl bg-gray-700 text-gray-100 appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer">
+                    <option value="">All Types</option>
+                </select>
+                <select id="status-filter" class="pl-4 pr-10 py-3 border-2 border-gray-600 rounded-xl bg-gray-700 text-gray-100 appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer">
+                    <option value="">All Statuses</option>
+                </select>
+                <select id="verification-filter" class="pl-4 pr-10 py-3 border-2 border-gray-600 rounded-xl bg-gray-700 text-gray-100 appearance-none focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer">
+                    <option value="">All Update Status</option>
+                    <option value="recent">Updated in last 7 days</option>
+                    <option value="week">Updated in last 14 days</option>
+                    <option value="month">Updated in last 30 days</option>
+                    <option value="older">Older than 30 days</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Sponsored Section -->
+        <div class="sponsored-section bg-gray-700/60 backdrop-blur-sm text-gray-200 p-4 rounded-2xl shadow-lg mb-8 border border-gray-600">
+            <h3 class="text-lg font-semibold text-amber-400 mb-2">🏆 Sponsored Listing</h3>
+            <div class="bg-gray-800/50 p-4 rounded-lg shadow-inner">
+                <h4 class="font-bold text-lg text-gray-100">HoobieLoogie</h4>
+                <p class="text-sm text-gray-300">Your one-stop shop for all needs! Located at <code class="font-mono text-xs bg-black/20 text-green-400 px-1 py-0.5 rounded">/gps b003-second-floor</code>.</p>
+                <p class="text-xs text-gray-400 mt-2">Contact MoSS to sponsor your listing!</p>
+            </div>
+        </div>
+
+        <!-- Table Container -->
+        <div class="table-container bg-gray-800/80 backdrop-blur-md shadow-lg border border-gray-700/50 rounded-2xl overflow-hidden">
+            <!-- Loading State -->
+            <div class="loading" id="loading">
+                <div class="text-center p-12 text-gray-400">
+                    <div class="w-12 h-12 border-4 border-gray-700 border-t-indigo-500 rounded-full animate-spin mx-auto mb-4"></div>
+                    <p class="font-semibold text-lg">Loading registry data...</p>
+                    <p class="text-sm">Fetching live data from Google Sheets.</p>
+                </div>
+            </div>
+            <!-- Error State -->
+            <div class="error" id="error-state" style="display: none;">
+                <div class="text-center p-12 text-red-400 bg-red-900/20 rounded-lg">
+                    <h3 class="font-bold text-xl mb-2">Error Loading Data</h3>
+                    <p>Unable to fetch data. Please ensure both spreadsheets are published to the web as CSV.</p>
+                    <p class="mt-2 text-sm">
+                        <a href="#" id="error-shops-link" class="font-semibold underline hover:text-red-300" target="_blank" rel="noopener noreferrer">View Shops Sheet</a> | 
+                        <a href="#" id="error-rentals-link" class="font-semibold underline hover:text-red-300" target="_blank" rel="noopener noreferrer">View Rentals Sheet</a>
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Table -->
+            <table id="registry-table" class="w-full" style="display: none;">
+                <thead class="hidden md:table-header-group">
+                    <tr class="bg-gray-900 text-gray-100">
+                        <th class="p-4 text-left uppercase text-sm font-semibold tracking-wide">Name</th>
+                        <th class="p-4 text-left uppercase text-sm font-semibold tracking-wide">GPS Point</th>
+                        <th class="p-4 text-left uppercase text-sm font-semibold tracking-wide">Type</th>
+                        <th class="p-4 text-left uppercase text-sm font-semibold tracking-wide">Status</th>
+                        <th class="p-4 text-left uppercase text-sm font-semibold tracking-wide">Last Updated</th>
+                        <th class="p-4 text-left uppercase text-sm font-semibold tracking-wide">Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="registry-tbody" class="block md:table-row-group">
+                    <!-- Data will be inserted here -->
+                </tbody>
+            </table>
+            
+            <!-- Empty State -->
+            <div class="empty-state" id="empty-state" style="display: none;">
+                <div class="text-center p-12 text-gray-400">
+                    <h3 class="font-bold text-xl mb-2">No listings found</h3>
+                    <p>Try adjusting your search or filters.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white/70 p-8 text-center mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center flex-wrap gap-4">
+                <p class="text-sm">&copy; 2025 Ministry of Social Services - Azalea Isles</p>
+                <div class="flex gap-6 text-sm">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                    <a href="#" class="hover:text-white transition-colors">Contact MoSS</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // === CONFIGURATION ===
+
+        // Category colors (unique keys only)
+        const categoryColors = {
+            'Miner': '#e67e22',
+            'Forester': '#27ae60',
+            'Farmer': '#f1c40f',
+            'Chef': '#e74c3c',
+            'Hunter': '#9b59b6',
+            'Mechanic': '#34495e',
+            'Gunsmith': '#c0392b',
+            'Brewer': '#8e44ad',
+            'Carpenter': '#d35400',
+            'Artist': '#1abc9c',
+            'Journalist': '#3498db',
+            'Misc.': '#95a5a6',
+            'Fisherman': '#16a085',
+            'Residential': '#27ae60',
+            'Commercial': '#e67e22',
+            'Whole Building': '#9b59b6',
+            'Whole Floor': '#f1c40f',
+            'Stall': '#34495e',
+            'Office': '#3498db',
+            'Warehouse': '#95a5a6'
+        };
+
+        const REGISTRIES = {
+            shops: {
+                name: "Shops",
+                csv: "https://docs.google.com/spreadsheets/d/e/2PACX-1vT3eRJFOg_r7ezk8EgbjmaEYogC7C6rOfwn5gerbyOemRwP44Cz-zsLp-hkqK3C8gE-GVe4vyq_DtOS/pub?output=csv",
+                title: "Azalea Isles Shop Registry",
+                icon: "🏪",
+                editLink: "https://docs.google.com/spreadsheets/d/1dv57ip0aG3n13ztFmkO3Df5cbKj5s_-jdQFqtil66wc/edit",
+                headerRow: 2, 
+                dataRow: 3,   
+                nameKey: "Shop Name",
+                typeKey: "Category of Items Sold",
+                statusKey: "Transaction Types",
+                verifyKey: "Last Verified",
+                statusMap: {
+                    "Buys & Sells Items": "Buys & Sells",
+                    "Buys Items": "Buys",
+                    "Sells Items": "Sells",
+                    "unknown": "Unknown"
+                }
+            },
+            rentals: {
+                name: "Rentals",
+                csv: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSrcSRRw1yMiRYGY7XxW0yX0EWuTPfzmBlDzMQsV21pws6FgVXK8yBW0A0Nuy1Sh179STuAMeru4ICe/pub?output=csv",
+                title: "Azalea Isles Rental Registry",
+                icon: "🏠",
+                editLink: "https://docs.google.com/spreadsheets/d/1MkVlrf8q-6yafuSmAqZRGIM7s3RcAmaU7jvzUIwgRYo/edit",
+                headerRow: 2, 
+                dataRow: 3,   
+                nameKey: "Unit ID", 
+                typeKey: "Rental Type",
+                statusKey: "Status", 
+                verifyKey: "Last Verified", 
+                statusMap: {
+                    "Available": "Available",
+                    "Unavailable": "Unavailable",
+                    "Rented": "Unavailable", 
+                    "unknown": "Unknown"
+                }
+            }
+        };
+
+        // State
+        let currentRegistry = 'shops';
+        let dataCache = { shops: [], rentals: [] };
+
+        // DOM
+        const switchShops = document.getElementById('show-shops');
+        const switchRentals = document.getElementById('show-rentals');
+        const pageTitle = document.getElementById('page-title');
+        const reportLink = document.getElementById('report-link');
+        const table = document.getElementById('registry-table');
+        const tbody = document.getElementById('registry-tbody');
+        const loading = document.getElementById('loading');
+        const errorState = document.getElementById('error-state');
+        const emptyState = document.getElementById('empty-state');
+        const searchInput = document.getElementById('search-input');
+        const categoryFilter = document.getElementById('category-filter');
+        const statusFilter = document.getElementById('status-filter');
+        const verificationFilter = document.getElementById('verification-filter');
+        const errorShopsLink = document.getElementById('error-shops-link');
+        const errorRentalsLink = document.getElementById('error-rentals-link');
+
+        // Stats
+        const totalItemsEl = document.getElementById('total-items');
+        const recentlyVerifiedEl = document.getElementById('recently-verified');
+
+        // Helper: create TD for responsive table
+        function td(row, className, content, label) {
+            const cell = document.createElement('td');
+            // Tailwind classes for responsive table cell
+            cell.className = `block md:table-cell text-right md:text-left py-3.5 px-4 md:p-4 border-b border-gray-700 md:border-b-0 relative md:static pl-32 md:pl-4 ${className}`;
+            
+            // Add the mobile label (hidden on desktop)
+            const labelSpan = document.createElement('span');
+            labelSpan.className = 'md:hidden absolute left-4 top-3.5 text-xs font-bold uppercase text-gray-400 w-24 text-left';
+            labelSpan.textContent = label;
+            cell.appendChild(labelSpan);
+            
+            // Add the content
+            cell.innerHTML += content;
+            row.appendChild(cell);
+        }
+
+        // Days ago from YYYY-MM-DD (now uses current date)
+        function daysAgo(dateStr) {
+            if (!dateStr || dateStr === 'unknown' || dateStr === '') return Infinity;
+            const [y, m, d] = dateStr.split('-').map(Number);
+            if (isNaN(y) || isNaN(m) || isNaN(d) || m < 1 || m > 12 || d < 1 || d > 31) return Infinity;
+            
+            try {
+                const verifiedUTC = Date.UTC(y, m - 1, d);
+                const today = new Date();
+                const todayUTC = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+                
+                const diff = todayUTC - verifiedUTC;
+                if (diff < 0) return 0; // Handle future dates as 'today'
+                return Math.floor(diff / (1000 * 60 * 60 * 24));
+            } catch (e) {
+                console.warn(`Invalid date string encountered: ${dateStr}`);
+                return Infinity;
+            }
+        }
+
+        // Parse CSV with quoted fields
+        function parseCSV(csv, type) {
+            // Use a robust regex to split lines
+            const lines = csv.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+            
+            const config = REGISTRIES[type];
+            if (lines.length < config.dataRow) return []; 
+
+            // This regex splits by comma, but ignores commas inside double quotes
+            const regex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
+
+            // Get headers from the correct row
+            const headerLine = lines[config.headerRow - 1];
+            // Split headers using the regex, trim them, remove quotes, and remove trailing colons
+            const headers = headerLine.split(regex).map(h => 
+                h.trim().replace(/^"|"$/g, '').replace(/:$/, '')
+            );
+
+            const data = [];
+            // Get data from the correct row
+            for (let i = config.dataRow - 1; i < lines.length; i++) {
+                const line = lines[i];
+                if (!line) continue;
+
+                // Split values using the same regex
+                const values = line.split(regex).map(v => 
+                    v.trim().replace(/^"|"$/g, '')
+                );
+                
+                if (!values[0] || values[0] === '') continue;
+
+                const row = {};
+                headers.forEach((h, idx) => row[h] = values[idx] || '');
+
+                const rawCats = row[config.typeKey] || '';
+                // Split categories by comma, trim, and filter empty ones
+                const categories = rawCats.split(',').map(c => c.trim()).filter(Boolean);
+
+                const item = {
+                    name: row[config.nameKey] || 'Unknown',
+                    gps: row['GPS Point'] || '',
+                    categories: categories,
+                    rawStatus: row[config.statusKey] || 'unknown',
+                    verified: row[config.verifyKey] || '',
+                    notes: row['Additional Notes'] || '-'
+                };
+                item.status = config.statusMap[item.rawStatus] || item.rawStatus;
+                data.push(item);
+            }
+            return data;
+        }
+
+        // Load registry
+        async function loadRegistry(type) {
+            const url = REGISTRIES[type].csv;
+            try {
+                // Add cache-busting param
+                const res = await fetch(`${url}&_=${new Date().getTime()}`);
+                if (!res.ok) {
+                    console.error(`Fetch failed for ${type}: ${res.status}`);
+                    return [];
+                }
+                const csv = await res.text();
+                if (!csv || csv.includes('<!DOCTYPE html>')) {
+                    console.warn(`Empty or invalid CSV for ${type}`);
+                    return [];
+                }
+                const parsed = parseCSV(csv, type);
+                console.log(`SUCCESS: ${type.toUpperCase()} loaded ${parsed.length} rows`);
+                return parsed;
+            } catch (err) {
+                console.error(`Error loading ${type}:`, err);
+                return [];
+            }
+        }
+
+        // Unique helpers
+        function getUniqueCategories(data) {
+            const set = new Set();
+            data.forEach(i => i.categories.forEach(c => set.add(c)));
+            return Array.from(set).sort();
+        }
+        function getUniqueStatuses(data) {
+            const set = new Set();
+            data.forEach(i => set.add(i.status));
+            return Array.from(set).sort();
+        }
+
+        // Populate filters
+        function populateFilters(type) {
+            const data = dataCache[type] || [];
+            const uniqCats = getUniqueCategories(data);
+            const uniqStats = getUniqueStatuses(data);
+
+            categoryFilter.innerHTML = '<option value="">All Types</option>';
+            uniqCats.forEach(c => {
+                if(c) {
+                    const o = document.createElement('option');
+                    o.value = c; o.textContent = c;
+                    categoryFilter.appendChild(o);
+                }
+            });
+
+            statusFilter.innerHTML = '<option value="">All Statuses</option>';
+            uniqStats.forEach(s => {
+                if(s) {
+                    const o = document.createElement('option');
+                    o.value = s; o.textContent = s;
+                    statusFilter.appendChild(o);
+                }
+            });
+        }
+
+        // Render
+        function renderRegistry(data) {
+            tbody.innerHTML = '';
+            if (!data || data.length === 0) {
+                table.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+            emptyState.style.display = 'none';
+            table.style.display = 'table';
+
+            data.forEach((item, index) => { // Added index for animation
+                const tr = document.createElement('tr');
+                // NEW: Added fade-in animation and improved hover
+                tr.className = 'block md:table-row mb-4 md:mb-0 shadow-lg md:shadow-none rounded-lg md:rounded-none overflow-hidden md:overflow-visible hover:bg-indigo-500/10 transition-colors duration-200 fade-in';
+                // NEW: Staggered animation delay
+                tr.style.animationDelay = `${index * 25}ms`;
+
+                const days = daysAgo(item.verified); // Get days for NEW badge
+
+                // Name
+                // NEW: Added "NEW!" badge logic
+                let nameContent = item.name;
+                if (days <= 2 && days !== Infinity) {
+                    nameContent += ` <span class="ml-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">NEW!</span>`;
+                }
+                td(tr, 'font-semibold text-gray-100', nameContent, 'Name');
+                
+                // GPS
+                // NEW: Added copy-to-clipboard button
+                const gpsContent = item.gps ? 
+                    `<div class="flex justify-end md:justify-start items-center gap-2">
+                        <code class="font-mono bg-gray-700 text-green-400 font-semibold px-2 py-1 rounded-md text-sm">${item.gps}</code>
+                        <button title="Copy GPS" class="copy-gps-btn p-1.5 rounded-md bg-gray-600 hover:bg-indigo-600 text-gray-200 hover:text-white transition border border-gray-500 hover:border-indigo-500" data-gps="${item.gps}">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                        </button>
+                    </div>` : 
+                    '<em>None</em>';
+                td(tr, '', gpsContent, 'GPS');
+
+                // Types
+                // NEW: Changed to <button> for click-to-filter
+                let typeContent = '<em>—</em>';
+                if (item.categories.length) {
+                    const div = document.createElement('div');
+                    div.className = 'flex flex-wrap justify-end md:justify-start gap-1.5';
+                    item.categories.forEach(c => {
+                        const tag = document.createElement('button'); // Changed from <span>
+                        tag.className = 'category-tag-btn text-white text-xs font-semibold px-3 py-1 rounded-full cursor-pointer hover:opacity-80 transition-opacity';
+                        tag.textContent = c;
+                        tag.style.backgroundColor = categoryColors[c] || '#7f8c8d';
+                        tag.dataset.category = c; // Add data attribute for filtering
+                        div.appendChild(tag);
+                    });
+                    typeContent = div.innerHTML;
+                }
+                td(tr, '', typeContent, 'Type');
+
+                // Status
+                const span = document.createElement('span');
+                span.className = 'text-xs font-semibold px-3 py-1.5 rounded-full text-white text-center inline-block min-w-[80px] whitespace-nowrap';
+                const displayStatus = item.status;
+                if (currentRegistry === 'shops') {
+                    if (displayStatus === 'Buys & Sells') { span.classList.add('bg-green-600'); span.textContent = 'Buys & Sells'; }
+                    else if (displayStatus === 'Sells') { span.classList.add('bg-amber-500'); span.textContent = displayStatus; }
+                    else if (displayStatus === 'Buys') { span.classList.add('bg-blue-600'); span.textContent = displayStatus; }
+                    else { span.classList.add('bg-gray-500'); span.textContent = displayStatus || 'Unknown'; }
+                } else {
+                    if (displayStatus === 'Available') { span.classList.add('bg-green-600'); }
+                    else if (displayStatus === 'Unavailable') { span.classList.add('bg-amber-500'); }
+                    else { span.classList.add('bg-gray-500'); }
+                    span.textContent = displayStatus || 'Unknown';
+                }
+                td(tr, '', span.outerHTML, 'Status');
+
+                // Verification
+                let verifyClass = 'text-gray-400';
+                if (days === Infinity) { verifyClass = 'text-gray-500 italic'; }
+                else if (days <= 7) { verifyClass = 'text-green-400 font-semibold'; }
+                else if (days <= 30) { verifyClass = 'text-amber-400 font-semibold'; }
+                else { verifyClass = 'text-red-400 font-semibold'; }
+                const verifyText = days === Infinity ? 'Never' : `${days} day${days === 1 ? '' : 's'} ago`;
+                td(tr, `text-sm ${verifyClass}`, verifyText, 'Updated');
+
+                // Notes
+                td(tr, 'text-sm text-gray-400', item.notes, 'Notes');
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Stats (Simplified)
+        function updateStats(data) {
+            if (!data) return;
+            const total = data.length;
+            const recent = data.filter(i => daysAgo(i.verified) <= 7 && daysAgo(i.verified) !== Infinity).length;
+
+            totalItemsEl.textContent = total;
+            recentlyVerifiedEl.textContent = recent;
+        }
+
+        // Filter
+        function filterData() {
+            const data = dataCache[currentRegistry] || [];
+            const term = searchInput.value.toLowerCase();
+            const cat = categoryFilter.value;
+            const status = statusFilter.value;
+            const verify = verificationFilter.value;
+
+            const filtered = data.filter(item => {
+                const searchOk = !term ||
+                    item.name.toLowerCase().includes(term) ||
+                    (item.gps && item.gps.toLowerCase().includes(term)) ||
+                    item.categories.some(c => c.toLowerCase().includes(term)) ||
+                    item.notes.toLowerCase().includes(term);
+
+                const catOk = !cat || item.categories.includes(cat);
+                const statusOk = !status || item.status === status;
+
+                let verifyOk = true;
+                if (verify) {
+                    const d = daysAgo(item.verified);
+                    switch (verify) {
+                        case 'recent': verifyOk = d <= 7 && d !== Infinity; break;
+                        case 'week': verifyOk = d <= 14 && d !== Infinity; break;
+                        case 'month': verifyOk = d <= 30 && d !== Infinity; break;
+                        case 'older': verifyOk = d > 30 || d === Infinity; break;
+                    }
+                }
+                return searchOk && catOk && statusOk && verifyOk;
+            });
+            renderRegistry(filtered);
+            // Update stats based on filtered data, not all data
+            updateStats(filtered); 
+        }
+
+        // Switch
+        function switchTo(type) {
+            currentRegistry = type;
+            
+            // Update buttons
+            switchShops.classList.toggle('bg-indigo-600', type === 'shops');
+            switchShops.classList.toggle('text-white', type === 'shops');
+            switchShops.classList.toggle('text-gray-200', type !== 'shops');
+
+            switchRentals.classList.toggle('bg-indigo-600', type === 'rentals');
+            switchRentals.classList.toggle('text-white', type === 'rentals');
+            switchRentals.classList.toggle('text-gray-200', type !== 'rentals');
+
+
+            const cfg = REGISTRIES[type];
+            pageTitle.innerHTML = `<span class="bg-indigo-600 text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">MoSS Official</span> <span role="img" aria-label="store" class="text-3xl">${cfg.icon}</span> ${cfg.title}`;
+            
+            const data = dataCache[type] || [];
+            populateFilters(type);
+            // Reset filters and search
+            searchInput.value = '';
+            categoryFilter.value = '';
+            statusFilter.value = '';
+            verificationFilter.value = '';
+            
+            // Render all data for the new tab
+            renderRegistry(data);
+            updateStats(data);
+        }
+
+        // Events
+        switchShops.addEventListener('click', () => switchTo('shops'));
+        switchRentals.addEventListener('click', () => switchTo('rentals'));
+        searchInput.addEventListener('input', filterData);
+        [categoryFilter, statusFilter, verificationFilter].forEach(el => el.addEventListener('change', filterData));
+
+        // --- NEW: Event Listeners for Features ---
+
+        // Use event delegation for dynamic content
+        tbody.addEventListener('click', function(e) {
+            // 1. Click-to-Filter Categories
+            const categoryBtn = e.target.closest('.category-tag-btn');
+            if (categoryBtn) {
+                e.preventDefault(); // Stop button default behavior
+                const category = categoryBtn.dataset.category;
+                if (category) {
+                    categoryFilter.value = category;
+                    filterData();
+                    // Optional: Scroll up to filters
+                    const controlsEl = document.querySelector('.controls');
+                    if (controlsEl) {
+                        controlsEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+                }
+                return; // Stop processing
+            }
+
+            // 2. Copy-to-Clipboard
+            const copyBtn = e.target.closest('.copy-gps-btn');
+            if (copyBtn) {
+                e.preventDefault(); // Stop button default behavior
+                const gpsText = copyBtn.dataset.gps;
+                if (gpsText) {
+                    copyToClipboard(gpsText, copyBtn);
+                }
+            }
+        });
+
+        // Helper function for Clipboard API
+        function copyToClipboard(text, buttonEl) {
+            // Use document.execCommand as per instructions for iFrame compatibility
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'absolute';
+            textarea.style.left = '-9999px';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                // Visual Feedback
+                if (buttonEl) {
+                    const originalContent = buttonEl.innerHTML;
+                    // Show checkmark
+                    buttonEl.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>`;
+                    buttonEl.classList.add('copied-feedback'); // Add green class
+                    
+                    // Revert after 1.5 seconds
+                    setTimeout(() => {
+                        buttonEl.innerHTML = originalContent;
+                        buttonEl.classList.remove('copied-feedback');
+                    }, 1500);
+                }
+            } catch (err) {
+                console.error('Failed to copy to clipboard', err);
+            }
+            document.body.removeChild(textarea);
+        }
+
+        // --- End of New Listeners ---
+
+
+        // Init
+        async function init() {
+            loading.style.display = 'block';
+            errorState.style.display = 'none';
+            table.style.display = 'none';
+            emptyState.style.display = 'none';
+
+            console.log('Loading shops CSV...');
+            const shopsData = await loadRegistry('shops');
+
+            console.log('Loading rentals CSV...');
+            const rentalsData = await loadRegistry('rentals');
+
+            dataCache.shops = shopsData;
+            dataCache.rentals = rentalsData;
+
+            errorShopsLink.href = REGISTRIES.shops.editLink;
+            errorRentalsLink.href = REGISTRIES.rentals.editLink;
+
+            if (shopsData.length === 0 && rentalsData.length === 0) {
+                console.warn('Both registries returned no data. Showing error state.');
+                errorState.style.display = 'block';
+            } else {
+                if(shopsData.length === 0) console.warn("Shop data is empty. Check CSV URL and format.");
+                if(rentalsData.length === 0) console.warn("Rental data is empty. Check CSV URL and format.");
+                
+                switchTo('shops');
+            }
+
+            loading.style.display = 'none';
+        }
+
+        // Auto-refresh every 5 minutes
+        setInterval(init, 300000);
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
