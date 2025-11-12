@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Azalea Isles Registries</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="https://static.wikia.nocookie.net/minecraft_gamepedia/images/c/c0/Moss_Block_JE1_BE1.png">
+
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -35,7 +37,7 @@
             background: #1f2937; /* gray-800 */
         }
 
-        /* NEW: Animation for table rows */
+        /* Animation for table rows */
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -51,11 +53,43 @@
             animation: fadeIn 0.3s ease-out forwards;
         }
 
-        /* NEW: Class for copy-to-clipboard feedback */
-        .copied-feedback {
-            background-color: #22c55e !important; /* Tailwind green-500 */
-            border-color: #16a34a !important;   /* Tailwind green-600 */
+        /* --- REMOVED ---
+           .copied-feedback class
+           --- /REMOVED --- */
+
+        /* NEW: Moss block animation */
+        @keyframes mossPoof {
+            0% {
+                transform: scale(0.5) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.2) translateY(-30px);
+                opacity: 0;
+            }
         }
+
+        .moss-particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: #4A7628; /* Moss Green */
+            /* Creates a 3x3 pixel 'poof' */
+            box-shadow: 5px 0 0 #4A7628, -5px 0 0 #4A7628,
+                        0 5px 0 #4A7628, 0 -5px 0 #4A7628,
+                        5px 5px 0 #55852F, -5px -5px 0 #55852F,
+                        5px -5px 0 #3E6620, -5px 5px 0 #3E6620;
+            animation: mossPoof 0.5s ease-out forwards;
+            /* Center the particle inside the button */
+            left: 50%;
+            top: 50%;
+            margin-left: -7px; /* Half of the 3*5px cluster */
+            margin-top: -7px;
+            pointer-events: none; /* So it doesn't block clicks */
+            /* Add a little blur to feel more 'organic' */
+            filter: blur(0.5px);
+        }
+
     </style>
 </head>
 <body class="bg-gradient-to-br from-gray-900 to-slate-800 text-gray-100 min-h-screen">
@@ -69,7 +103,7 @@
                     <!-- Page Title -->
                     <h1 id="page-title" class="text-2xl font-bold text-gray-100 flex items-center gap-3">
                         <span class="bg-indigo-600 text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Official</span>
-                        <span role="img" aria-label="store" class="text-3xl">🏪</span>
+                        <span role="img" aria-label="store" class="text-3xl">宵</span>
                         Azalea Isles Shop Registry
                     </h1>
                     <!-- Registry Switcher -->
@@ -84,7 +118,7 @@
                 </div>
                 
                 <!-- Report/Update Link -->
-                <a href="https://discord.gg/mpSu9YfVjg" class="report-issue bg-indigo-600 text-white font-semibold px-5 py-2.5 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-300 transform hover:-translate-y-0.5" id="report-link" target="_blank" rel="noopener noreferrer">
+                <a href="https://discord.gg/mpSu9YfVjg" class="report-issue bg-blue-600 text-white font-semibold px-5 py-2.5 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-300 transform hover:-translate-y-0.5" id="report-link" target="_blank" rel="noopener noreferrer">
                     Join MoSS Discord
                 </a>
             </div>
@@ -133,10 +167,12 @@
         </div>
 
         <!-- Sponsored Section -->
-<div class="sponsored-section bg-gray-700/60 backdrop-blur-sm text-gray-200 p-4 rounded-2xl shadow-lg mb-8 border border-gray-600">
+        <div class="sponsored-section bg-gray-700/60 backdrop-blur-sm text-gray-200 p-4 rounded-2xl shadow-lg mb-8 border border-gray-600">
             <h3 class="text-lg font-semibold text-amber-400 mb-2">🏆 Sponsored Listing</h3>
+            <!-- This div will be filled by our script -->
             <div id="sponsored-content" class="bg-gray-800/50 p-4 rounded-lg shadow-inner min-h-[100px]">
-                </div>
+                <p class="text-sm text-gray-400">Loading sponsored listing...</p>
+            </div>
         </div>
 
         <!-- Table Container -->
@@ -235,7 +271,7 @@
                 name: "Shops",
                 csv: "https://docs.google.com/spreadsheets/d/e/2PACX-1vT3eRJFOg_r7ezk8EgbjmaEYogC7C6rOfwn5gerbyOemRwP44Cz-zsLp-hkqK3C8gE-GVe4vyq_DtOS/pub?output=csv",
                 title: "Azalea Isles Shop Registry",
-                icon: "🏪",
+                icon: "宵",
                 editLink: "https://docs.google.com/spreadsheets/d/1dv57ip0aG3n13ztFmkO3Df5cbKj5s_-jdQFqtil66wc/edit",
                 headerRow: 2, 
                 dataRow: 3,   
@@ -254,7 +290,7 @@
                 name: "Rentals",
                 csv: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSrcSRRw1yMiRYGY7XxW0yX0EWuTPfzmBlDzMQsV21pws6FgVXK8yBW0A0Nuy1Sh179STuAMeru4ICe/pub?output=csv",
                 title: "Azalea Isles Rental Registry",
-                icon: "🏠",
+                icon: "匠",
                 editLink: "https://docs.google.com/spreadsheets/d/1MkVlrf8q-6yafuSmAqZRGIM7s3RcAmaU7jvzUIwgRYo/edit",
                 headerRow: 2, 
                 dataRow: 3,   
@@ -270,6 +306,17 @@
                 }
             }
         };
+
+        // === NEW: SPONSORED CONFIG ===
+        const SPONSORED_CONFIG = {
+            csv: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTeIN1EDzhy3UO-OZb73YnnKNb_oWYBTVV_rr15pPUxD7NRQb4dDBx_-2Ep2xZYHiEFJBYKWIN3Lpod/pub?output=csv",
+            headerRow: 1, 
+            dataRow: 2,   
+            nameKey: "Name",
+            descKey: "Description",
+            gpsKey: "GPS"
+        };
+
 
         // State
         let currentRegistry = 'shops';
@@ -385,6 +432,33 @@
             return data;
         }
 
+        // NEW: Parse Sponsored CSV
+        function parseSponsoredCSV(csv) {
+            const lines = csv.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+            const config = SPONSORED_CONFIG;
+            if (lines.length < config.dataRow) return null; 
+
+            const regex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
+            // Get headers from header row
+            const headers = lines[config.headerRow - 1].split(regex).map(h => h.trim().replace(/^"|"$/g, ''));
+            // Get data from data row
+            const values = lines[config.dataRow - 1].split(regex).map(v => v.trim().replace(/^"|"$/g, ''));
+            
+            const sponsoredItem = {};
+            headers.forEach((h, idx) => sponsoredItem[h] = values[idx] || '');
+
+            // Only return the first valid item
+            if (sponsoredItem[config.nameKey]) {
+                return {
+                    name: sponsoredItem[config.nameKey],
+                    desc: sponsoredItem[config.descKey],
+                    gps: sponsoredItem[config.gpsKey]
+                };
+            }
+            return null;
+        }
+
+
         // Load registry
         async function loadRegistry(type) {
             const url = REGISTRIES[type].csv;
@@ -406,6 +480,38 @@
             } catch (err) {
                 console.error(`Error loading ${type}:`, err);
                 return [];
+            }
+        }
+
+        // NEW: Load and Render Sponsored Listing
+        async function loadAndRenderSponsored() {
+            const contentEl = document.getElementById('sponsored-content');
+            if (!contentEl) return;
+
+            try {
+                const res = await fetch(`${SPONSORED_CONFIG.csv}&_=${new Date().getTime()}`);
+                if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+                
+                const csv = await res.text();
+                if (!csv || csv.includes('<!DOCTYPE html>')) throw new Error('Invalid CSV response');
+
+                const item = parseSponsoredCSV(csv);
+
+                if (item) {
+                    contentEl.innerHTML = `
+                        <h4 class="font-bold text-lg text-gray-100">${item.name}</h4>
+                        <p class="text-sm text-gray-300">${item.desc}</p>
+                        ${item.gps ? `
+                        <p class="text-sm text-gray-300 mt-2">Located at <code class="font-mono text-xs bg-black/20 text-green-400 px-1 py-0.5 rounded">${item.gps}</code></p>
+                        ` : ''}
+                        <p class="text-xs text-gray-400 mt-2">Contact MoSS to sponsor your listing!</p>
+                    `;
+                } else {
+                    throw new Error('No valid sponsored item found in sheet.');
+                }
+            } catch (err) {
+                console.error('Failed to load sponsored listing:', err);
+                contentEl.innerHTML = '<p class="text-sm text-gray-400">Sponsored listing is currently unavailable.</p>';
             }
         }
 
@@ -459,15 +565,12 @@
 
             data.forEach((item, index) => { // Added index for animation
                 const tr = document.createElement('tr');
-                // NEW: Added fade-in animation and improved hover
                 tr.className = 'block md:table-row mb-4 md:mb-0 shadow-lg md:shadow-none rounded-lg md:rounded-none overflow-hidden md:overflow-visible hover:bg-indigo-500/10 transition-colors duration-200 fade-in';
-                // NEW: Staggered animation delay
                 tr.style.animationDelay = `${index * 25}ms`;
 
-                const days = daysAgo(item.verified); // Get days for NEW badge
+                const days = daysAgo(item.verified);
 
                 // Name
-                // NEW: Added "NEW!" badge logic
                 let nameContent = item.name;
                 if (days <= 2 && days !== Infinity) {
                     nameContent += ` <span class="ml-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">NEW!</span>`;
@@ -475,11 +578,11 @@
                 td(tr, 'font-semibold text-gray-100', nameContent, 'Name');
                 
                 // GPS
-                // NEW: Added copy-to-clipboard button
+                // NEW: Added 'relative' class to button for animation positioning
                 const gpsContent = item.gps ? 
                     `<div class="flex justify-end md:justify-start items-center gap-2">
                         <code class="font-mono bg-gray-700 text-green-400 font-semibold px-2 py-1 rounded-md text-sm">${item.gps}</code>
-                        <button title="Copy GPS" class="copy-gps-btn p-1.5 rounded-md bg-gray-600 hover:bg-indigo-600 text-gray-200 hover:text-white transition border border-gray-500 hover:border-indigo-500" data-gps="${item.gps}">
+                        <button title="Copy GPS" class="copy-gps-btn relative p-1.5 rounded-md bg-gray-600 hover:bg-indigo-600 text-gray-200 hover:text-white transition border border-gray-500 hover:border-indigo-500" data-gps="${item.gps}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
                         </button>
                     </div>` : 
@@ -487,17 +590,16 @@
                 td(tr, '', gpsContent, 'GPS');
 
                 // Types
-                // NEW: Changed to <button> for click-to-filter
-                let typeContent = '<em>—</em>';
+                let typeContent = '<em>窶/em>';
                 if (item.categories.length) {
                     const div = document.createElement('div');
                     div.className = 'flex flex-wrap justify-end md:justify-start gap-1.5';
                     item.categories.forEach(c => {
-                        const tag = document.createElement('button'); // Changed from <span>
+                        const tag = document.createElement('button'); 
                         tag.className = 'category-tag-btn text-white text-xs font-semibold px-3 py-1 rounded-full cursor-pointer hover:opacity-80 transition-opacity';
                         tag.textContent = c;
                         tag.style.backgroundColor = categoryColors[c] || '#7f8c8d';
-                        tag.dataset.category = c; // Add data attribute for filtering
+                        tag.dataset.category = c;
                         div.appendChild(tag);
                     });
                     typeContent = div.innerHTML;
@@ -533,6 +635,7 @@
                 // Notes
                 td(tr, 'text-sm text-gray-400', item.notes, 'Notes');
 
+D
                 tbody.appendChild(tr);
             });
         }
@@ -597,7 +700,7 @@
 
 
             const cfg = REGISTRIES[type];
-            pageTitle.innerHTML = `<span class="bg-indigo-600 text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Official</span> <span role="img" aria-label="store" class="text-3xl">${cfg.icon}</span> ${cfg.title}`;
+            pageTitle.innerHTML = `<span class="bg-indigo-600 text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">MoSS Official</span> <span role="img" aria-label="store" class="text-3xl">${cfg.icon}</span> ${cfg.title}`;
             
             const data = dataCache[type] || [];
             populateFilters(type);
@@ -618,7 +721,7 @@
         searchInput.addEventListener('input', filterData);
         [categoryFilter, statusFilter, verificationFilter].forEach(el => el.addEventListener('change', filterData));
 
-        // --- NEW: Event Listeners for Features ---
+        // Event Listeners for Features
 
         // Use event delegation for dynamic content
         tbody.addEventListener('click', function(e) {
@@ -650,6 +753,7 @@
             }
         });
 
+        // --- NEW: Replaced copyToClipboard function ---
         // Helper function for Clipboard API
         function copyToClipboard(text, buttonEl) {
             // Use document.execCommand as per instructions for iFrame compatibility
@@ -661,25 +765,35 @@
             textarea.select();
             try {
                 document.execCommand('copy');
-                // Visual Feedback
+                
+                // --- NEW: Moss Block Animation Feedback ---
                 if (buttonEl) {
-                    const originalContent = buttonEl.innerHTML;
-                    // Show checkmark
-                    buttonEl.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>`;
-                    buttonEl.classList.add('copied-feedback'); // Add green class
+                    // Create the particle
+                    const particle = document.createElement('div');
+                    particle.className = 'moss-particle';
                     
-                    // Revert after 1.5 seconds
+                    // Add it to the button
+                    buttonEl.appendChild(particle);
+                    
+                    // Disable button briefly to prevent spam
+                    buttonEl.disabled = true;
+
+                    // Remove the particle after animation
                     setTimeout(() => {
-                        buttonEl.innerHTML = originalContent;
-                        buttonEl.classList.remove('copied-feedback');
-                    }, 1500);
+                        if (buttonEl) {
+                            // Check if particle still exists before removing
+                            if(particle.parentElement) {
+                                buttonEl.removeChild(particle);
+                            }
+                            buttonEl.disabled = false;
+                        }
+                    }, 500); // 500ms = animation duration
                 }
             } catch (err) {
                 console.error('Failed to copy to clipboard', err);
             }
             document.body.removeChild(textarea);
         }
-
         // --- End of New Listeners ---
 
 
@@ -695,6 +809,10 @@
 
             console.log('Loading rentals CSV...');
             const rentalsData = await loadRegistry('rentals');
+
+            // NEW: Load sponsored data
+            console.log('Loading sponsored data...');
+            loadAndRenderSponsored(); // <-- ADDED THIS CALL
 
             dataCache.shops = shopsData;
             dataCache.rentals = rentalsData;
