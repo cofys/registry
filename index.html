@@ -4,7 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Azalea Isles Registries</title>
-    <link rel="icon" type="image/png" sizes="32x32" href="https://static.wikia.nocookie.net/minecraft_gamepedia/images/c/c0/Moss_Block_JE1_BE1.png">
+
+    <!-- NEW: FAVICON LINKS -->
+    <!-- Replace these URLs with links to your hosted favicon image -->
+    <!-- A 32x32 PNG is a good standard -->
+    <link rel="icon" type="image/png" sizes="32x32" href="https://placehold.co/32x32/4A7628/FFFFFF?text=AI">
+    <!-- Apple Touch Icon (for iOS home screen) -->
+    <link rel="apple-touch-icon" sizes="180x180" href="https://placehold.co/180x180/4A7628/FFFFFF?text=AI">
+    <!-- END FAVICON LINKS -->
 
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -271,7 +278,7 @@
                 name: "Shops",
                 csv: "https://docs.google.com/spreadsheets/d/e/2PACX-1vT3eRJFOg_r7ezk8EgbjmaEYogC7C6rOfwn5gerbyOemRwP44Cz-zsLp-hkqK3C8gE-GVe4vyq_DtOS/pub?output=csv",
                 title: "Azalea Isles Shop Registry",
-                icon: "宵",
+                icon: "🛒",
                 editLink: "https://docs.google.com/spreadsheets/d/1dv57ip0aG3n13ztFmkO3Df5cbKj5s_-jdQFqtil66wc/edit",
                 headerRow: 2, 
                 dataRow: 3,   
@@ -290,7 +297,7 @@
                 name: "Rentals",
                 csv: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSrcSRRw1yMiRYGY7XxW0yX0EWuTPfzmBlDzMQsV21pws6FgVXK8yBW0A0Nuy1Sh179STuAMeru4ICe/pub?output=csv",
                 title: "Azalea Isles Rental Registry",
-                icon: "匠",
+                icon: "🏡",
                 editLink: "https://docs.google.com/spreadsheets/d/1MkVlrf8q-6yafuSmAqZRGIM7s3RcAmaU7jvzUIwgRYo/edit",
                 headerRow: 2, 
                 dataRow: 3,   
@@ -635,7 +642,6 @@
                 // Notes
                 td(tr, 'text-sm text-gray-400', item.notes, 'Notes');
 
-D
                 tbody.appendChild(tr);
             });
         }
