@@ -108,13 +108,8 @@
                         Azalea Isles Shop Registry
                     </h1>
                     <!-- Registry Switcher -->
-                    <div class="flex gap-1 p-1 bg-gray-700/75 rounded-xl">
-                        <button id="show-shops" class="switch-btn flex-1 px-4 py-1.5 font-semibold rounded-lg transition-all duration-300 text-sm">
-                            Shops
-                        </button>
-                        <button id="show-rentals" class="switch-btn flex-1 px-4 py-1.5 font-semibold rounded-lg transition-all duration-300 text-sm">
-                            Rentals
-                        </button>
+                    <div class="flex gap-1 p-1 bg-gray-700/75 rounded-xl" style="padding: .5em;">
+                        <a class="text-sm font-semibold" style="display:block; text-align: center; align-content: center;" href="https://cityrp.jotoho.de/rentalregistry.html">Go to Rental Registry</a>
                     </div>
                 </div>
                 
@@ -324,8 +319,6 @@
         let dataCache = { shops: [], rentals: [] };
 
         // DOM
-        const switchShops = document.getElementById('show-shops');
-        const switchRentals = document.getElementById('show-rentals');
         const pageTitle = document.getElementById('page-title');
         const reportLink = document.getElementById('report-link');
         const table = document.getElementById('registry-table');
@@ -688,16 +681,6 @@
         // Switch
         function switchTo(type) {
             currentRegistry = type;
-            
-            // Update buttons
-            switchShops.classList.toggle('bg-indigo-600', type === 'shops');
-            switchShops.classList.toggle('text-white', type === 'shops');
-            switchShops.classList.toggle('text-gray-200', type !== 'shops');
-
-            switchRentals.classList.toggle('bg-indigo-600', type === 'rentals');
-            switchRentals.classList.toggle('text-white', type === 'rentals');
-            switchRentals.classList.toggle('text-gray-200', type !== 'rentals');
-
 
             const cfg = REGISTRIES[type];
             pageTitle.innerHTML = `<span class="bg-indigo-600 text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Official</span> <span role="img" aria-label="store" class="text-3xl">${cfg.icon}</span> ${cfg.title}`;
@@ -716,8 +699,6 @@
         }
 
         // Events
-        switchShops.addEventListener('click', () => switchTo('shops'));
-        switchRentals.addEventListener('click', () => switchTo('rentals'));
         searchInput.addEventListener('input', filterData);
         [categoryFilter, statusFilter, verificationFilter].forEach(el => el.addEventListener('change', filterData));
 
